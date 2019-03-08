@@ -1,0 +1,310 @@
+{
+	"info": {
+		"_postman_id": "9a3f660f-9413-4fd0-a2c6-781c38346de8",
+		"name": "Category",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GetCategory",
+			"item": [
+				{
+					"name": "localhost:3001/category?id=1001 OK",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:3001/category?id=1001",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"category"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1001"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "localhost:3001/category?id=1011 FAIL (id not found)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:3001/category?id=1011",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"category"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1011"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "localhost:3001/category FAIL (no id in request)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:3001/category",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"category"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "localhost:3001/category?id=abc FAIL (id not a number)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:3001/category?id=abc",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"category"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "abc"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "DeleteCategory",
+			"item": [
+				{
+					"name": "localhost:3001/delete_category?id=1001 OK",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:3001/delete_category?id=1001",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"delete_category"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1001"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "localhost:3001/delete_category?id=9999 FAIL (id not found)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:3001/delete_category?id=9999",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"delete_category"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "9999"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "localhost:3001/delete_category FAIL (no id in request)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:3001/delete_category",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"delete_category"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "localhost:3001/delete_category?id=abc FAIL (id not a number)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:3001/delete_category?id=abc",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"delete_category"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "abc"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "PostCategory",
+			"item": [
+				{
+					"name": "http://localhost:3001/add_category OK",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\":5555,\n\t\"name\":\"Test\",\n\t\"budget\":0\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3001/add_category",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"add_category"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
