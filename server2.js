@@ -2,7 +2,6 @@
 
 var express = require('express');
 var app = express();
-// var fs = require("fs");
 var bodyParser = require('body-parser');
 var jsonfile = require('jsonfile');
 
@@ -20,7 +19,7 @@ app.use(function (req, res, next) {
 });
 
 
-// ENDPOINTS
+// WEB SERVICE ENDPOINTS (REST API services)
 
 // hello
 app.get('/hello', function (req, res) {
@@ -33,19 +32,31 @@ app.get('/category/all', function (req, res) {
     jsonfile.readFile(filePath)
     .then((obj) => {
         res.writeHead(200, { 'Content-Type': 'text/plain' });
-        res.end("Reading server side JSON file OK.\n" + JSON.stringify(obj));
+        res.end(JSON.stringify(obj));
+        console.log("Reading server side JSON file OK.\n" + JSON.stringify(obj));
     })
     .catch(() => {
         res.writeHead(500, { 'Content-Type': 'text/plain' });
-        res.end("Reading server side JSON file failed.");
+        res.end();
+        console.error("Reading server side JSON file failed.");
         }
     );
 });
 
 // GET category based on ID
 app.get('/category', function (req, res) {
-    let id = req.query.id;
-    getItemBasedOnId(res, id);
+	let id = req.query.id;
+	if (!id) {
+		res.writeHead(400, { 'Content-Type': 'text/plain' });
+		res.end();
+		console.error("Reading server side JSON file failed.\n" + "No ID supplied in query.");
+	} else if (isNaN(id)) {
+		res.writeHead(400, { 'Content-Type': 'text/plain' });
+		res.end();
+		console.error("Reading server side JSON file failed.\n" + "The supplied ID is not a number.");
+	} else {
+		fetchItemBasedOnId(res, id);
+	}
 });
 
 // POST category (id, name, budget)
@@ -55,47 +66,60 @@ app.post('/add_category', function (req, res) {
     let budget = req.body.budget;
     let newItem = { id, name, budget };
     addItemToJsonArrayFile(res, newItem);
-})
+});
 
 // DELETE category?id=1001
 app.delete('/delete_category', function (req, res) {
-    let id = req.query.id;
-    deleteItemBasedOnId(res, id);
-})
+	let id = req.query.id;
+	if (!id) {
+		res.writeHead(400, { 'Content-Type': 'text/plain' });
+		res.end();
+		console.error("Reading server side JSON file failed.\n" + "No ID supplied in query.");
+	} else if (isNaN(id)) {
+		res.writeHead(400, { 'Content-Type': 'text/plain' });
+		res.end();
+		console.error("Reading server side JSON file failed.\n" + "The supplied ID is not a number.");
+	} else {
+		deleteItemBasedOnId(res, id);
+	}	
+});
 
 
 // HELPER FUNCTIONS
 
-function getItemBasedOnId (res, id) {
-    let item;
+function fetchItemBasedOnId (res, id) {
+    let item = null;
     jsonfile.readFile(filePath)
     .then((obj) => {
-        for (let i=0; i < obj.length; i++) {
-            if (obj[i].id == id) {
-                item = obj.splice(i, 1);
+        for (let i = 0; i < obj.length; i++) {
+            if (obj[i].id === Number(id)) {
+                item = obj[i];
             }
         };
         if (item) {
             res.writeHead(200, { 'Content-Type': 'text/plain' });
-            res.end("Reading server side JSON file OK.\n" + "Item found: " + JSON.stringify(item));
+            res.end(JSON.stringify(item));
+            console.log("Reading server side JSON file OK.\n" + "Item found: " + JSON.stringify(item));
         } else {
             res.writeHead(404, { 'Content-Type': 'text/plain' });
-            res.end("Reading server side JSON file OK.\n" + "No item found with ID = " + id + ".");
+            res.end();
+            console.log("Reading server side JSON file OK.\n" + "No item found with ID = " + id + ".");
         };
     })
     .catch(() => {
         res.writeHead(500, { 'Content-Type': 'text/plain' });
-        res.end("Reading server side JSON file failed.");
+        res.end();
+        console.error("Reading server side JSON file failed.");
         }
     );
 };
 
 function deleteItemBasedOnId (res, id) {
-    let item;
+    let item = null;
     jsonfile.readFile(filePath)
     .then((obj) => {
-        for (let i=0; i < obj.length; i++) {
-            if (obj[i].id == id) {
+        for (let i = 0; i < obj.length; i++) {
+            if (obj[i].id === Number(id)) {
                 item = obj.splice(i, 1);
             }
         };
@@ -103,23 +127,27 @@ function deleteItemBasedOnId (res, id) {
             jsonfile.writeFile(filePath, obj)
             .then(() => {
                 res.writeHead(200, { 'Content-Type': 'text/plain' });
-                res.end("Writing JSON to server file system OK.\n" + "Item deleted: " + JSON.stringify(item));
+                res.end();
+                console.log("Writing JSON to server file system OK.\n" + "Item deleted: " + JSON.stringify(item));
             })
             .catch(() => {
                 res.writeHead(500, { 'Content-Type': 'text/plain' });
-                res.end("Writing JSON to server file system failed.");
+                res.end();
+                console.error("Writing JSON to server file system failed.");
             });
         } else {
             res.writeHead(404, { 'Content-Type': 'text/plain' });
-            res.end("Reading server side JSON file OK.\n" + "No item found with ID = " + id + ".");
+            res.end();
+            console.log("Reading server side JSON file OK.\n" + "No item found with ID = " + id + ".");
         };
     })
     .catch(() => {
         res.writeHead(500, { 'Content-Type': 'text/plain' });
-        res.end("Reading server side JSON file failed.");
+        res.end();
+        console.error("Reading server side JSON file failed.");
         }
     );
-}
+};
 
 function addItemToJsonArrayFile (res, newItem) {
     jsonfile.readFile(filePath)
@@ -128,16 +156,19 @@ function addItemToJsonArrayFile (res, newItem) {
         jsonfile.writeFile(filePath, obj)
         .then(() => {
             res.writeHead(200, { 'Content-Type': 'text/plain' });
-            res.end("Writing JSON to server file system OK.");
+            res.end();
+            console.log("Writing JSON to server file system OK.\n" + "Item added: " + JSON.stringify(newItem));
         })
         .catch(() => {
             res.writeHead(500, { 'Content-Type': 'text/plain' });
-            res.end("Writing JSON to server file system failed.");
+            res.end();
+            console.error("Writing JSON to server file system failed.");
         });
     })
     .catch(() => {
         res.writeHead(500, { 'Content-Type': 'text/plain' });
-        res.end("Reading server side JSON file failed.");
+        res.end();
+        console.error("Reading server side JSON file failed.");
         }
     );
 };
