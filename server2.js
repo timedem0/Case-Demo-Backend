@@ -84,6 +84,27 @@ app.delete('/delete_category', function (req, res) {
 	}	
 });
 
+// GET categories by budget limit
+app.get('/category/idsByBudgetLimit', function (req, res) {
+    let limit = req.query.limit;
+    let above = req.query.above;
+	if (!limit || !above) {
+		res.writeHead(400, { 'Content-Type': 'text/plain' });
+		res.end();
+		console.error("Reading server side JSON file failed.\n" + "Incomplete parameters supplied in query.");
+	} else if (isNaN(limit)) {
+		res.writeHead(400, { 'Content-Type': 'text/plain' });
+		res.end();
+		console.error("Reading server side JSON file failed.\n" + "Limit is not a number.");
+	} else if (above !== "true" && above !== "false") {
+		res.writeHead(400, { 'Content-Type': 'text/plain' });
+		res.end();
+		console.error("Reading server side JSON file failed.\n" + "Parameter in wrong format.");    
+    } else {
+		fetchIdsByBudgetLimit(res, limit, above);
+	}
+});
+
 
 // HELPER FUNCTIONS
 
@@ -164,6 +185,33 @@ function addItemToJsonArrayFile (res, newItem) {
             res.end();
             console.error("Writing JSON to server file system failed.");
         });
+    })
+    .catch(() => {
+        res.writeHead(500, { 'Content-Type': 'text/plain' });
+        res.end();
+        console.error("Reading server side JSON file failed.");
+        }
+    );
+};
+
+function fetchIdsByBudgetLimit(res, limit, above) {
+    let list = [];
+    jsonfile.readFile(filePath)
+    .then((obj) => {
+        for (let i = 0; i < obj.length; i++) {
+            if (above == "true") {
+                if (Number(obj[i].budget) > Number(limit)) {
+                    list.push(obj[i].id);
+                }
+            } else if (above == "false") {
+                if (Number(obj[i].budget) <= Number(limit)) {
+                    list.push(obj[i].id);
+                }
+            }
+        };
+        res.writeHead(200, { 'Content-Type': 'text/plain' });
+        res.end(JSON.stringify(list));
+        console.log("Reading server side JSON file OK.\n" + "List built: " + JSON.stringify(list));
     })
     .catch(() => {
         res.writeHead(500, { 'Content-Type': 'text/plain' });
