@@ -173,7 +173,19 @@ function deleteItemBasedOnId (res, id) {
 function addItemToJsonArrayFile (res, newItem) {
     jsonfile.readFile(filePath)
     .then((obj) => {
-        obj.push(newItem);
+        let isItemNew;
+        for (i in obj) {
+            if (obj[i].id == newItem.id) {
+                obj[i] = newItem;
+                isItemNew = false;
+                break;
+            } else {
+                isItemNew = true;
+            }
+        }
+        if (isItemNew) {
+            obj.push(newItem);
+        }
         jsonfile.writeFile(filePath, obj)
         .then(() => {
             res.writeHead(200, { 'Content-Type': 'text/plain' });
